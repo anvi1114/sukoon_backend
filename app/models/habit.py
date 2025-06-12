@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String, Boolean, ForeignKey
 from sqlalchemy.orm import relationship
 from app.db.base import Base
-from app.models.habit_day import HabitDay
+#from app.models.habit_day import HabitDay
 
 class Habit(Base):
     __tablename__ = "habits"

@@ -1,10 +1,14 @@
 from fastapi import FastAPI, Depends
 from sqlalchemy.orm import Session
-
-from app.api import auth, journal, task, habit  # ✅ included habit here
-from app.db.database import engine, Base, get_db
-from app.models import journal as journal_models  # 👈 This registers journal models (do it for others too)
+from fastapi.security import OAuth2PasswordRequestForm
+from sqlalchemy.orm import Session
+from app.api import auth, journal, task, habit 
+from app.db.database import engine, get_db
+from app.models import journal as journal_models  
 from app.api import calendar_event
+from app.db.base import Base
+from app.api import auth
+import app.models
 
 app = FastAPI()
 
@@ -12,7 +16,7 @@ app = FastAPI()
 Base.metadata.create_all(bind=engine)
 
 # ✅ Include all routers
-app.include_router(auth.router)
+app.include_router(auth.router, prefix="/auth")
 app.include_router(journal.router)
 app.include_router(task.router)
 app.include_router(habit.router, prefix="/api", tags=["Habit Tracker"])  # ✅ Correctly placed
@@ -36,3 +40,8 @@ def test_db_connection(db: Session = Depends(get_db)):
         return {"message": "Connected to the database successfully!"}
     except Exception as e:
         return {"message": f"Error: {str(e)}"}
+    
+
+@app.post("/token")
+def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+    return auth.login_user(db, form_data)

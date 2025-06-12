@@ -1,7 +1,7 @@
 # app/models/journal.py
 from sqlalchemy import Column, Integer, String, Text, Date, Enum, ForeignKey
 from sqlalchemy.orm import relationship
-from app.db.database import Base
+from app.db.base import Base
 import enum
 
 class MoodEnum(enum.Enum):
@@ -18,4 +18,7 @@ class Journal(Base):
     photo_url = Column(String, nullable=True)
     date = Column(Date, nullable=False)
     mood = Column(Enum(MoodEnum), default=MoodEnum.neutral)
+   
+   
+    user = relationship("User", back_populates="journal_entries")
 

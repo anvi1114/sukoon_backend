@@ -12,4 +12,5 @@ class CalendarEvent(Base):
     description = Column(String, nullable=True)
     user_id = Column(Integer, ForeignKey("users.id"))
 
-    user = relationship("User", back_populates="events")
+    user = relationship("User", back_populates="calendar_events")
+
